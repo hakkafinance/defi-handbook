@@ -1,0 +1,99 @@
+import ChecksumAddressFormatter from '../../components/tools/ChecksumAddressFormatter'
+
+# ERC20
+
+## Interface
+
+```solidity
+interface IERC20 {
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    function name() public view returns (string);
+    function symbol() public view returns (string);
+    function decimals() public view returns (uint8);
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+}
+```
+
+ERC20 is a popular token standard on Etheruem. ERC20 is widely utilized in all kinds of DeFi protocols.
+
+<br />
+<br />
+
+### totalSupply
+
+Returns the amount of tokens in existence.
+
+<br />
+
+### balanceOf
+
+Returns the amount of tokens owned by `account`.
+
+<br />
+
+### transfer
+
+Moves `amount` tokens from the caller's account to `recipient`.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Emits a `Transfer` event.
+
+<br />
+
+### allowance
+
+Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through transferFrom.
+
+This is zero by default.
+
+This value changes when `approve` or `transferFrom` are called.
+
+<br />
+
+### approve
+
+Sets `amount` as the allowance of `spender` over the caller's tokens.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Emits an `Approval` event.
+
+<br />
+
+### transferFrom
+
+Moves `amount` tokens from `sender` to `recipient` using the allowance mechanism. `amount` is then deducted from the caller's allowance.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Emits a `Transfer` event.
+
+<br />
+<br />
+
+## Use Cases
+
+### Ask someone allowance before transfering from their balance
+
+```javascript
+contract DaiExchange {
+  IERC20 DAI = IERC20();
+  uint256 rate = 1e17;
+
+  function DaiToEthSwap(uint256 _amount) external returns (bool success) {
+    require(DAI.allowance(msg.sender, address(this)) > _amount, 'not enough allowance');
+    DAI.transferFrom(msg.sender, address(this), _amount);
+    uint256 output = _amount * rate;
+
+    msg.sender.transfer(output);
+  }
+}
+```

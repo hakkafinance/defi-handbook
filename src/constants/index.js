@@ -1,0 +1,4 @@
+export const READ_ONLY = 'READ_ONLY'
+
+export const UNISWAP_FACTORY_ADDRESS =
+  '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'

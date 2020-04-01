@@ -1,0 +1,5 @@
+# build
+[build]
+  base = "."
+  publish = "out/"
+  command = "npm run build:static"

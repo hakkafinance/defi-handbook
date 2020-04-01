@@ -1,0 +1,50 @@
+[
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "interface",
+    "content": "interface IERC20 {event Transfer(address indexed from, address indexed to, uint256 value);event Approval(address indexed owner, address indexed spender, uint256 value);function name() public view returns (string);function symbol() public view returns (string);function decimals() public view returns (uint8);function totalSupply() external view returns (uint256);function balanceOf(address account) external view returns (uint256);function transfer(address recipient, uint256 amount) external returns (bool);function allowance(address owner, address spender) external view returns (uint256);function approve(address spender, uint256 amount) external returns (bool);function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);}"
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "interface",
+    "content": "ERC20 is a popular token standard on Etheruem. ERC20 is widely utilized in all kinds of DeFi protocols."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "totalSupply",
+    "content": "Returns the amount of tokens in existence."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "balanceOf",
+    "content": "Returns the amount of tokens owned by account."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "transfer",
+    "content": "Moves amount tokens from the caller's account to recipient.Returns a boolean value indicating whether the operation succeeded.Emits a `Transfer` event."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "allowance",
+    "content": "Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through transferFrom.This is zero by default.This value changes when approve or transferFrom are called."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "approve",
+    "content": "Sets amount as the allowance of spender over the caller's tokens. Returns a boolean value indicating whether the operation succeeded.Emits an Approval event."
+  },
+  {
+    "title": "ERC20",
+    "category": "token",
+    "section": "transferFrom",
+    "content": "Moves amount tokens from sender to recipient using the allowance mechanism. amount is then deducted from the caller's allowance. Returns a boolean value indicating whether the operation succeeded. Emits a Transfer event."
+  }
+]

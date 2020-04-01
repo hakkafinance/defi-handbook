@@ -1,0 +1,181 @@
+import Box from '@material-ui/core/Box'
+import TokenToExchange from '../../components/tools/TokenToExchange'
+
+# Uniswap
+
+## Interface
+
+```solidity
+contract Exchange {
+    function ethToTokenSwapInput(uint256 min_tokens, uint256 deadline) external payable returns (uint256 tokens_bought);
+    function ethToTokenTransferInput(uint256 min_tokens, uint256 deadline, address recipient) external payable returns (uint256 tokens_bought);
+    function ethToTokenSwapOutput(uint256 tokens_bought, uint256 deadline) external payable returns (uint256 eth_sold);
+    function ethToTokenTransferOutput(uint256 tokens_bought, uint256 deadline, address recipient) external payable returns (uint256 eth_sold);
+
+    function tokenToEthSwapInput(uint256 tokens_sold, uint256 min_eth, uint256 deadline) external returns (uint256 eth_bought);
+    function tokenToEthTransferInput(uint256 tokens_sold, uint256 min_eth, uint256 deadline, address recipient) external returns (uint256 eth_bought);
+    function tokenToEthSwapOutput(uint256 eth_bought, uint256 max_tokens, uint256 deadline) external returns (uint256 tokens_sold);
+    function tokenToEthTransferOutput(uint256 eth_bought, uint256 max_tokens, uint256 deadline, address recipient) external returns (uint256 tokens_sold);
+
+    function tokenToTokenSwapInput(uint256 tokens_sold, uint256 min_tokens_bought, uint256 min_eth_bought, uint256 deadline, address token_addr) external returns (uint256 tokens_bought);
+    function tokenToTokenTransferInput(uint256 tokens_sold, uint256 min_tokens_bought, uint256 min_eth_bought, uint256 deadline, address recipient, address token_addr) external returns (uint256 tokens_bought);
+    function tokenToTokenSwapOutput(uint256 tokens_bought, uint256 max_tokens_sold, uint256 max_eth_sold, uint256 deadline, address token_addr) external returns (uint256 tokens_sold);
+    function tokenToTokenTransferOutput(uint256 tokens_bought, uint256 max_tokens_sold, uint256 max_eth_sold, uint256 deadline, address recipient, address token_addr) external returns (uint256 tokens_sold);
+
+    function tokenToExchangeSwapInput(uint256 tokens_sold, uint256 min_tokens_bought, uint256 min_eth_bought, uint256 deadline, address exchange_addr) external returns (uint256 tokens_bought);
+    function tokenToExchangeTransferInput(uint256 tokens_sold, uint256 min_tokens_bought, uint256 min_eth_bought, uint256 deadline, address recipient, address exchange_addr) external returns (uint256 tokens_bought);
+    function tokenToExchangeSwapOutput(uint256 tokens_bought, uint256 max_tokens_sold, uint256 max_eth_sold, uint256 deadline, address exchange_addr) external returns (uint256 tokens_sold);
+    function tokenToExchangeTransferOutput(uint256 tokens_bought, uint256 max_tokens_sold, uint256 max_eth_sold, uint256 deadline, address recipient, address exchange_addr) external returns (uint256 tokens_sold);
+
+    function getEthToTokenInputPrice(uint256 eth_sold) external view returns (uint256 tokens_bought);
+    function getEthToTokenOutputPrice(uint256 tokens_bought) external view returns (uint256 eth_sold);
+    function getTokenToEthInputPrice(uint256 tokens_sold) external view returns (uint256 eth_bought);
+    function getTokenToEthOutputPrice(uint256 eth_bought) external view returns (uint256 tokens_sold);
+}
+```
+
+```solidity
+contract Factory {
+    function getExchange(address token_addr) public view returns(address);
+}
+```
+
+<Box mb={2}>
+  Uniswap is a Algorithm Market Maker protocol provides liquidity for ERC20
+  token to Eth and ERC20 to ERC20. Each ERC20 token has an unique exchange
+  address contains Eth and ERC20 token as reserve, the exchange rate is also
+  base on the rate of two sides. Since there's no ERC20 to ERC20 reserve pool,
+  when doing ERC20 to ERC20 swap, it's in fact selling input ERC20 for Eth and
+  then buy the output ERC20 with those Eth.
+</Box>
+<Box mb={2}>
+  There's a singleton Uniswap `Factory` to create new exchange and to query the
+  mapping of ERC20 token to its exchange address.
+</Box>
+<Box mb={2}>
+  Uniswap factory address on mainnet:
+  `0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95`.
+</Box>
+<Box mb={2}>
+  There are a bunch of trade functions with Uniswap, but they are in fact 4 core
+  functions and 2 suffixes constitute 4 x 2 x 2 = 16 functions.
+</Box>
+<br />
+<br />
+
+### Exchange
+
+#### ethToToken
+
+<Box mb={2}>Swap Eth to ERC20 token.</Box>
+
+> for ethToToken, it uses `msg.value` instead of an input param.
+
+#### tokenToEth
+
+<Box mb={2}>Swap ERC20 token to Eth.</Box>
+
+#### tokenToToken
+
+<Box mb={2}>Swap a ERC20 token to another ERC20 token.</Box>
+
+#### tokenToExchange
+
+<Box mb={2}>
+  Same as tokenToToken, but use the exchange address as input instead of ERC20
+  address.
+</Box>
+
+> It's more gas efficient to use tokenToExchange than tokenToToken because it saves the effort of querying exchange address from the factory onchain. If your DAPP only support some knows tokens, hardcode their exchange address. If your DAPP wants to support arbitrary token, query the exchange address offchain and put it as an input of your DAPP's function.
+
+<Box mx={5} my={2}>
+  <TokenToExchange />
+</Box>
+<br />
+
+> #### Function Suffixes
+>
+> ##### _Input / Output_
+>
+> - **Input** : Given a certain `input` amount you'd like to pay, the `output` amount must be higher than the minimum you set, otherwise tx fail.
+> - **Output** : Given a certain `output` amount you'd like to buy, the cost must not be higher than the maximun `input` amount you set, otherwist tx fail.
+>
+> ##### _Swap / Transfer_
+>
+> - **Swap** : Send the output token or Eth to the payer(msg.sender).
+> - **Transfer** : Send the output token or Eth to another `recipient` address.
+
+<br />
+
+> #### Other params
+>
+> ##### _max_eth_sold / min_eth_bought_
+>
+> When doing token to token swaps, these params limit the amount of Eth transfer between two exchanges. In most scenarios you don't really care about it. You can simply set it to `uint(-1)` or `1`.
+>
+> ##### _deadline_
+>
+> A UNIX timestanp. To prevent unfavor late trades, a tx will fail if it happens after the `deadline` user sets. For DAPPs, you may either get that number from input or just use `now` instead.
+>
+> > For liquidity functions, use `now + 1`.
+
+<br />
+
+> #### Getters
+>
+> <Box mb={2}>
+>   Uniswap's exchange rate is determined by both reserve rate and the trade
+>   volume.
+> </Box>
+> <Box mb={2}>
+>   Same as trade functions' logic, you can either set an input or output amount
+>   to get the other.
+> </Box>
+> <Box mb={2}>
+>   To get a ERC20 to ERC20 rate, you can first use `getTokenToEthInputPrice()`
+>   from the input ERC20's exchange, then use `getEthToTokenInputPrice()` from
+>   the output ERC20's exchange.
+> </Box>
+
+<br />
+<br />
+
+### Factory
+
+#### getExchange
+
+Get the exchange address of `token_addr`.
+
+<br />
+<br />
+
+## Use Cases
+
+### Accept Eth and arbitrary ERC20 token for DAI payment
+
+```solidity
+contract DAIPayment is Ownable {
+    ERC20 DAI = ERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
+    address DAIExchange = address(0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667);
+
+    mapping(address => uint256) public DAIpaid;
+
+    function payWithEth() external payable {
+        uint256 DAIAmount = Exchange(DAIExchange).ethToTokenSwapInput.value(msg.value)(1, now);
+        DAIpaid[msg.sender] += DAIAmount;
+    }
+
+    function payWithAnyERC20(address token, address exchange, uint256 tokenAmount) external {
+        require(ERC20(token).transferFrom(msg.sender, address(this), tokenAmount));
+        require(ERC20(token).approve(exchange, tokenAmount));
+
+        uint256 DAIAmount = Exchange(exchange).tokenToExchangeSwapInput(tokenAmount, 1, 1, now, DAIExchange);
+        DAIpaid[msg.sender] += DAIAmount;
+    }
+
+    function withdraw() onlyOwner external {
+        DAI.transfer(owner, DAI.balanceOf(address(this)));
+    }
+
+}
+```

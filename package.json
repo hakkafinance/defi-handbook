@@ -1,0 +1,88 @@
+{
+  "name": "defi-handbook",
+  "version": "1.0.0",
+  "description": "DeFi Handbook make easier for you to dive into DeFi protocols",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "export": "next build && next export",
+    "start": "next start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint './src/**/*.{js,jsx}'",
+    "lint:fix": "npx eslint --fix './src/**/*.{js,jsx}'",
+    "format": "npx prettier --check 'src/**/*.{js,jsx,scss}'",
+    "format:fix": "npx prettier --write 'src/**/*.{js,jsx,scss}'",
+    "analyze": "cross-env ANALYZE=true next build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.9.3",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.9.0",
+    "@mdx-js/loader": "^1.5.5",
+    "@mui-treasury/layout": "^3.3.3",
+    "@mui-treasury/mockup": "^0.4.2",
+    "@next/bundle-analyzer": "^9.3.3",
+    "@next/mdx": "^9.2.1",
+    "@web3-react/core": "^6.0.7",
+    "@web3-react/network-connector": "^6.0.7",
+    "algoliasearch": "^4.0.2",
+    "clsx": "^1.1.0",
+    "cross-env": "^7.0.0",
+    "ethers": "^4.0.45",
+    "next": "^9.3.3",
+    "next-compose-plugins": "^2.2.0",
+    "next-images": "^1.4.0",
+    "next-transpile-modules": "^3.0.2",
+    "prism-react-renderer": "^1.0.2",
+    "prismjs": "^1.19.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-instantsearch-dom": "^6.3.0",
+    "scrypt": "^6.0.3",
+    "web3": "^2.0.0-alpha.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "@svgr/webpack": "^5.3.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-react-app": "^5.2.0",
+    "eslint-plugin-flowtype": "^3.13.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "husky": "^4.2.1",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "url-loader": "^4.0.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}
