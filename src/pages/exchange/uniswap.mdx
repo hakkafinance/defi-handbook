@@ -112,6 +112,7 @@ contract Factory {
 > ##### _max_eth_sold / min_eth_bought_
 >
 > When doing token to token swaps, these params limit the amount of Eth transfer between two exchanges. In most scenarios you don't really care about it. You can simply set it to `uint(-1)` or `1`.
+> > **Caution:** Setting to `0` is unacceptable and will cause the tx being reverted.
 >
 > ##### _deadline_
 >
